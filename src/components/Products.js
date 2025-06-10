@@ -1,31 +1,49 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchProducts } from '../features/products/ProductSlice';
 function Products() {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    axios
-      .get('https://fakestoreapi.com/products')
-      .then((response) => {
-        setProducts(response.data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error('Error fetching products:', error);
-        setLoading(false);
-      });
-  }, []);
-
-  if (loading) {
-    return <div>Loading products...</div>;
-  }
-
+  const { products, loading } = useSelector((state) => state.product);
+  const dispatch = useDispatch();
   return (
     <>
       <div className="content-wrapper container mt-4">
         <h2>Products</h2>
+
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            marginBottom: '15px',
+            alignContent: 'center',
+          }}
+        >
+          <button
+            style={{
+              color: 'blue',
+              backgroundColor: 'white',
+              border: 'solid 1px blue',
+              borderRadius: '10px',
+              width: '130px',
+              height: '40px',
+              fontWeight: '500',
+            }}
+            onClick={() => dispatch(fetchProducts())}
+          >
+            Show Products
+          </button>
+          {loading && (
+            <h5
+              style={{
+                color: 'blue',
+                width: '130px',
+                height: '40px',
+                fontWeight: '500',
+              }}
+            >
+              Loading...
+            </h5>
+          )}
+        </div>
+
         <table className="table table-bordered table-hover">
           <thead className="thead-dark">
             <tr>
